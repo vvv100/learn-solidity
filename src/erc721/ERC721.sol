@@ -3,6 +3,7 @@ pragma solidity ^0.8.6;
 
 import "./IERC721.sol";
 import "./Address.sol";
+import "./IERC721Receiver.sol";
 
 contract ERC721 is IERC721 {
     using Address for address;
@@ -44,16 +45,32 @@ contract ERC721 is IERC721 {
         address to,
         uint tokenId
     ) external override {
-
+        safeTransferFrom(from, to, tokenId, "");
     }
 
     function safeTransferFrom(
         address from,
         address to,
         uint tokenId,
-        bytes calldata data
-    ) external override {
+        bytes memory data
+    ) public override {
+        address owner = _owners[tokenId];
+        require(
+            _isApprovedOrOwner(owner, msg.sender, tokenId),
+            "not owner or approved"
+        );
+        _safeTransfer(owner, from, to, tokenId, data);
+    }
 
+    function _safeTransfer(
+        address owner,
+        address from,
+        address to,
+        uint tokenId,
+        bytes memory data
+    ) private {
+        _transfer(owner, from, to, tokenId);
+        require(_checkOnERC721Received(from, to, tokenId, data), "not ERC721Receiver");
     }
 
     function transferFrom(
@@ -66,8 +83,35 @@ contract ERC721 is IERC721 {
         _transfer(owner, from, to, tokenId);
     }
 
+    function _checkOnERC721Received(
+        address from,
+        address to,
+        uint tokenId,
+        bytes memory _data
+    ) private returns (bool) {
+        if (to.isContract()) {
+            return
+                IERC721Receiver(to).onERC721Received(
+                    msg.sender,
+                    from,
+                    tokenId,
+                    _data
+                ) == IERC721Receiver.onERC721Received.selector;
+        } else {
+            return true;
+        }
+    }
+
     function _transfer(address owner, address from, address to, uint tokenId) private {
-        
+        require(owner == from, "not owner");
+        require(to != address(0), "transfer to zero address");
+        _approve(owner, address(0), tokenId);
+
+        _balances[from]--;
+        _balances[to]++;
+        _owners[tokenId] = to;
+
+        emit Transfer(from, to, tokenId);
     }
 
     function _isApprovedOrOwner(address owner, address spender, uint tokenId) private returns(bool) {
@@ -111,5 +155,25 @@ contract ERC721 is IERC721 {
         return 
             interfaceId == type(IERC721).interfaceId ||
             interfaceId == type(IERC165).interfaceId;
+    }
+
+    function mint(address to, uint tokenId) external {
+        require(to != address(0), "mint to zero address");
+        require(_owners[tokenId] == address(0), "token already minted");
+        _owners[tokenId] = to;
+        _balances[to]++;
+
+        emit Transfer(address(0), to, tokenId);
+    }
+
+    function burn(uint tokenId) external {
+        address owner = _owners[tokenId];
+
+        _approve(owner, address(0), tokenId);
+
+        _balances[owner] -= 1;
+        delete _owners[tokenId];
+
+        emit Transfer(owner, address(0), tokenId);
     }
 }
