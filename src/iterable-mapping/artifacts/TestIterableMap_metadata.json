@@ -1,0 +1,61 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "test",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"src/iterable-mapping/TestIterableMap.sol": "TestIterableMap"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"src/iterable-mapping/IterableMap.sol": {
+			"keccak256": "0xddeb2176409dd66c2ff0c23d370ca177830a164e4e56db7f9a05da08c20f4f90",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b848fe75e2dac60519b1e04696bead72a6fe9b3e547a75ad78aa8ef93b05d9ea",
+				"dweb:/ipfs/QmTKi3ZHnE5ALBARiZjcs7dS95DH9UDQ643CgfUzM1YiXr"
+			]
+		},
+		"src/iterable-mapping/TestIterableMap.sol": {
+			"keccak256": "0x8ded8fb61c363d614f4e3faed349c5ee2bcc61a71f3727870237ee808ffed838",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6c653d5c66ea66673a6ba6aa7092140af7edfda05b6e2a800f5d7639accad376",
+				"dweb:/ipfs/QmPr1qMTQ3GyEZAikfqgDReubnWrUtZWLj71gL7Nxputer"
+			]
+		}
+	},
+	"version": 1
+}
